@@ -1,0 +1,696 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <script type="text/javascript"
+        src="https://cdn.jsdelivr.net/npm/brython@3.10.5/brython.min.js">
+    </script>
+    <script type="text/javascript"
+        src="https://cdn.jsdelivr.net/npm/brython@3.10.5/brython_stdlib.js">
+    </script>
+</head>
+
+<body onload="brython()">
+
+<script type="text/python">
+    #this is the next little project i kinda wanna do, maybe turtle and visuals could be a fun minor thing, we will see
+
+    #I kinda wanna make stuff more interactive than the original thing that gave me the idea. i may wanna just implement one
+    #of the originals, and then start to adapt it to my liking
+    # okay so the bare bones version of this, the direct copy of the original is done. Now onto adding some more interaction?
+    # so tripling the story telling is actually quite the task as i am learning
+    # its super fun but i will need to write all of the actual text instead of the placeholder descriptions at some point...
+    # and then figure out a way for the player to keep track of the current stats to make more strategic decisions
+    # and then find a way to share it with people
+    # all of this should be done soon
+    
+    import browser
+    import random
+    
+    def pirate_adventure(pining = 0, injury = 0, tension = 0):
+        if pining == 1000:
+            browser.document <= ("The end")
+        elif pining >= 10:
+            pining = pining_end(pining,injury, tension)
+            pining += 1
+        elif injury >= 12:
+            injury = injury_end(pining,injury,tension)
+            injury += 1
+        elif tension >= 15:
+            tension = tension_end(pining,injury,tension)
+            tension += 1
+        else:
+            result = random.randrange(1, 6)
+            mom = [1,2]
+            dis = [3,4]
+            eve = [5,6]
+            if result in mom:
+                pining, injury, tension = moment(pining, injury,tension)
+            elif result in dis:
+                pining, injury, tension = distance(pining, injury, tension)
+            elif result in eve:
+                pining, injury, tension = event(pining, injury, tension)
+        return (pining, injury, tension)
+    
+    
+    def moment(pining, injury, tension):
+        result = random.randrange(1, 6)
+        if result == 1:
+            browser.document <= ("Did his cutlass touch your leg? Was it intentional?")
+            user_input = input("Do you confront the captain? 'y'es or 'n'o")
+            if user_input == 'y':
+                browser.document <= ("The captain gives you a long, searching look")
+                tension += 1
+            elif user_input == 'n':
+                browser.document <= ("You sigh dreamily. It must have been intentional, right?")
+                pining += 1
+            else:
+                browser.document <= ("You are distracted and trip")
+                injury += 1
+        elif result == 2:
+            browser.document <= ("He tells you of his glory days!")
+            user_input = input('Do you attempt to show the king up? "y" or "n"?')
+            if user_input == 'y':
+                result = random.randrange(1, 6)
+                if result%2 == 0:
+                    browser.document <= ("The story of your glory days impresses the king deeply!")
+                    tension += 2
+                else:
+                    browser.document <= ("Your story falls flat. Better luck next time.")
+                    tension -= 1
+                    pining +=1
+            elif user_input == 'n':
+                browser.document <= ("You stay quiet")
+                pining += 2
+            else:
+                browser.document <= ("Before the King can finish his story you are interrupted. Nothing happens")
+        elif result == 3:
+            browser.document <= ("He spars with you. He is much better than you!")
+            user_input = input("are you frustrated by that? 'y' or 'n'?")
+            if user_input == 'y':
+                browser.document <= ("You push harder, trying to improve and impress him.")
+                tension += 1
+                injury += 1
+            elif user_input == 'n':
+                browser.document <= ("You admire and adore his skills. *sigh* he is so talented!")
+                pining += 1
+            else:
+                browser.document <= ("You are a fish on land...somehow you don't think thats going to work...")
+                injury += 1
+                tension -= 1
+                pining -= 1
+        elif result == 4:
+            user_input = input("You get into an argument. Do you stand up to him? 'y' or 'n")
+            if user_input == 'y':
+                browser.document <= ("As awesome as he is, you are not going to lie down and just let him do whatever he wants"
+                      "He loses his temper and chockes you a little")
+                user_input = input("Do you push him away? 'y' or 'n'?")
+                if user_input == 'y':
+                    browser.document <= ("You push him away, he stumbles and stares at you in admiration. He then gruffly orders you to get"
+                          "checked out by the ships medic.")
+                    tension += 2
+                    injury -= 3
+                elif user_input == 'n':
+                    browser.document <= ("He chokes you and you just let him, he is so strong! "
+                          "Can he see the hearts in your eyes? No. Surely not."
+                          "Anyway. He chokes you and you let him. Maybe you even like it? You are not sure. "
+                          "He suddenly lets you go, just as black spots are starting to drift into your vision.")
+                    tension += 2
+                    injury += 1
+                    pining += 1
+                else:
+                    browser.document <= ("You really need to stop being this passive. He glares at you and keeps chocking you, you struggle"
+                          "feebly. His face turns more and more disgusted. His sneer is the last thing you see before passing out")
+                    injury += 2
+                    tension -= 3
+        elif result == 5:
+            user_interface = input("He offers you a share of his booty. Do you accept? 'y' or 'n'?")
+            if user_interface == 'y':
+                browser.document <= ("Its rude to refuse. Of course you take it.")
+                tension += 1
+            elif user_interface == 'n':
+                browser.document <= ("Its rude to refuse. He sees disappointed. That could have gone better")
+                tension -= 1
+            else:
+                results = random.randrange(1,6)
+                browser.document <= ("Its rude to refuse. It would have looked weird if you took it. Torn in indecision your crewmates make"
+                      "the decision for you")
+                if results <= 3:
+                    browser.document <= ("Your crewmates start fighting about this share of booty. In the ensuring scuffle your nose gets broken")
+                    injury += 1
+                else:
+                    browser.document <= ("The pirate king thrusts the booty on you. He is so kind. You have no idea what this means.")
+                    pining += 1
+        elif result == 6:
+            browser.document <= ('He insists on taking you with him on a "mission".')
+            user_input = input("You are not sure if this is a real mission. Do you call his bluff? 'y' or 'n'?")
+            if user_input == 'y':
+                browser.document <= ("You tell him to his face that you don't believe this is a real mission. he seems to like your boldness."
+                      "Were you right though?")
+                tension += 1
+                coin_flip = random.choice(["Heads", "Tails"])
+                if coin_flip == "Heads":
+                    browser.document <= ("It wasn't a mission, he takes you on a romantic trip to a deserted island. He makes you food,"
+                          "and keeps you warm once the sun is setting. You impress him by cracking coconuts on the first try")
+                    tension += 2
+                    injury -= 1
+                else:
+                    browser.document <= ("Oops, you were wrong. There is actually a mission he needs help with.")
+                    injury += 1
+                    pining -= 1
+            elif user_input == 'n':
+                browser.document <= ("Because you did not call his bluff you spend the entire trip wondering if this was supposed to be a date")
+                pining += 2
+                injury += 2
+            else:
+                browser.document <= ("You hesitate just a moment too long and he calls you out. You confess that you are not sure if this"
+                      "is in fact a mission. He laughs warmly and you can feel your stomach go all squirmy")
+                pining += 2
+                user_input= input("He offers that it can be either. So? Is this actually a mission? 'y' or 'n'?")
+                if user_input == 'y':
+                    browser.document <= ("You are looking for a buried treasure. You are having a great time and he sees to enjoy himself too."
+                          "he is impressed by your ability to read maps and you work well as a team. He does however drop the "
+                          "full chest on your foot. Outch!")
+                    pining -= 1
+                    injury += 1
+                    tension += 1
+        return (pining, injury, tension)
+    
+    
+    
+    def distance(pining,injury,tension):
+        result = random.randrange(1, 6)
+        if result == 1:
+            browser.document <= ("Is that a musket in his pocket?")
+            user_input = input("Do you want to check? 'y' or 'n'?")
+            if user_input == 'y':
+                browser.document <= ("Or is that... OW its a musket!")
+                injury += 1
+            elif user_input == 'n':
+                browser.document <= ("You think checking is probably a bad idea. You cant help stare longingly")
+                pining += 1
+            else:
+                browser.document <= ("You tell yourself that its irrelevant and move on to doing the things you were supposed to do."
+                      "Your focus prbably saves your fingers.")
+                injury -= 1
+        elif result == 2:
+            browser.document <= ("Was that a wink? Its soo hard to tell under his eyepatch")
+            user_input = input("Do you think your comment deserved a flirty wink? 'y' or 'n'?")
+            if user_input == 'y':
+                coin_flip = random.choice(["Heads", "Tails"])
+                if coin_flip == "Heads":
+                    browser.document <= ("Your comment was suitable flirty and apparently the pirate king appreciated it. "
+                          "It had certainly been a wink")
+                    tension += 2
+                    pining -= 1
+                else:
+                    browser.document <= ("You were not flirty. Anything you thought you saw was just wishful thinking")
+                    pining += 2
+                    tension -= 1
+            elif user_input == 'n':
+                browser.document <= ("Well you certainly had not said anything that deserved a wink...")
+                coin_flip = random.choice(["Heads", "Tails"])
+                if coin_flip == "Heads":
+                    browser.document <= ("The pirate king was flirty though and he was not afraid to show it, it made your insights feel"
+                          "very tingly.")
+                    pining += 1
+                    tension += 1
+                else:
+                    browser.document <= ("You probably got a minor heatstroke.")
+                    user_input = input("Do you tell the king that you need to rest? 'y' or 'n'?")
+                    if user_input == 'y':
+                        browser.document <= ("The pirate king is impressed by your honesty and your ability to admit when you need help")
+                        injury -= 1
+                        tension += 1
+                    elif user_input == 'n':
+                        browser.document <= ("You are pushing through, not wanting to show weakness. That night you start throwing up.")
+                        injury += 2
+                        tension -= 1
+                    else:
+                        browser.document <= ("The pirate king eyes you critically when your eyes apparentl go unfocused. He sends you inside"
+                              "to rest. He seems annoyed at having to take care of you but you still can't help feeling "
+                              "touched")
+                        pining += 1
+                        tension -= 1
+            else:
+                browser.document <= ("Your strategy of not reacting to anything seems to be working okay. The day passes uneventfully")
+        elif result == 3:
+            browser.document <= ("He sings a sea shanty. Its about loving a crewmate")
+            user_input = input("Do you sing along? 'y' or 'n'?")
+            if user_input == 'y':
+                browser.document <= ("You sing along and while its not jsut you, it feels like it. The voices of the rest of the crew"
+                      "are faint in the background")
+                tension += 3
+            elif user_input == 'n':
+                browser.document <= ("he notices your silence. The look he throws you is serious, asking if you are okay.")
+                if pining > 8:
+                    user_input = input("You want him badly. The room is quiet and private, the atmosphere intimate. "
+                                       "This is your chance. Do you confess? 'y' or 'n'?")
+                    if user_input == 'y':
+                        browser.document <= ("You look at him intently and the tension ratchets up.")
+                        tension = 15
+                        if pining == 10:
+                            browser.document <= ("Your decision to confess releases some of the tension you build up.")
+                            pining = 9
+                        if injury == 12:
+                            browser.document <= ("You don't understand what is happening but apparently confessing your feelings is good for"
+                                  "your health? You instantly feel better")
+                            injury = 3
+                    else:
+                        browser.document <= ("You let the chance slide by. He lets it go, apparently aware that it is making you"
+                              "uncomfortable.")
+                        pining +=1
+                else:
+                    browser.document <= ("You know that this could be a moment of truth, but no... it still feels to dangerous. "
+                          "Sure you want him but you love this. THe crew, the ocean. everything.")
+                    user_input = input("Do you tell him you just have a headache? 'y' or 'n'")
+                    if user_input == 'y':
+                        browser.document <= ("He sends you to see the medic and tells you to rest immidiatly, his face drawing tight w/ worry."
+                              "The easy care he shows you kind of make you want him more but it also makes it easier to let "
+                              "this feeling go. He is your captain and your friend and you love that he cares about you.")
+                        injury -= 1
+                        pining -= 1
+                        tension += 1
+                    elif user_input =='n':
+                        browser.document <= ("You smile and him and tell him its nothing. You were just dstracted. You urge him to start"
+                              "singing again and join, even if you don't feel like it. Love songs hurt and his care hurts too"
+                              "its not what you want and you know its unfair to put that on him but ... it hurts that he bought"
+                              "your excuse just like that. You want him in a way you can never have.")
+                        injury += 1
+                        pining += 2
+                    else:
+                        browser.document <= ("He takes your silence as confirmation aomwthing is wrong. He tries to pressure you into"
+                              "telling him what it is. Your silent refusal makes him angry. He get louder and more agitated and"
+                              "while yiu logically know that he would never hit anyone on the crew out of frustration you can't"
+                              "help but scamper backwards, trying to get away. You stumble and fall, twisting your ankle")
+                        pining -= 1
+                        injury += 2
+                        tension -= 2
+            else:
+                browser.document <= ("You hum along, like the rest of the crew, the song is communal and warm, the day so normal")
+        elif result == 4:
+            user_input = input("He tells you to clean his bunk. Do you comply? 'y' or 'n'?")
+            if user_input == 'y':
+                browser.document <= ("You clean his bunk. Its disgustingm truly")
+                pining -= 2
+            elif user_input == 'n':
+                browser.document <= ("You refuse and he tries to convince you. You remind him that his bunk is not a communal area. He may "
+                      "be the captain but its still his responsibility to keep his own space clean. He is impressed by that")
+                tension += 1
+                user_input = input("He asks for help, says he does not know where to start. Do you help?")
+                if user_input == 'y':
+                    coin_flip = random.choice(["Heads", "Tails"])
+                    if coin_flip == 'Tails':
+                        browser.document <= ("He pretends to be incompetent and makes you do all the work after all. Not just the bunk but"
+                              "everygthing about this is disgusting.")
+                        pining -= 2
+                    else:
+                        browser.document <= ("He seems genuinly confused and tries to follow your instructions earnestly. Apparently he never"
+                              "had to clean for himself because the bunk is bad and he is clumsy and inexperienced. He tries though"
+                              "its very endearing.")
+                        pining += 1
+                        injury += 1
+                        tension += 2
+                else:
+                    browser.document <= ("You have your own chores to do, you don't have time for this.")
+                    coin_flip = random.choice(["Heads", "Tails"])
+                    if coin_flip == 'Tails':
+                        browser.document <= ("YOu see a fellow crewmate clean the bunk later that day. You are disappointed")
+                        pining -= 2
+                    else:
+                        browser.document <= ("He throws you proud looks and shows the cabin off when its done. its ... not good but the "
+                              "enthusiasm is endearing nonetheless. He seems grateful you made him learn")
+                        pining += 1
+                        tension += 1
+            else:
+                browser.document <= ("You did not even fully hear him, already aborbed in the next thing you have to do. You don't notice the"
+                      "weird look he is giving you")
+                tension += 1
+        elif result == 5:
+            browser.document <= ("He is rubbing his sword clean on his lap. That sounds like a euphemisim but its not. He sits there and cleans"
+                  "You don't know what to make of it. it could be hot? You guess? but somehow it looks more dangerous. "
+                  "You can't help notice that he is throwing glances your way.")
+            tension += 1
+        elif result == 6:
+            browser.document <= ('He is drunk and falls overboard')
+            browser.document <= ("You now have to make a choice. Do you 1) jump in after him to try and save him? or 2)throw a rope"
+                  "or 3) call for help?")
+            user_input = input("Type 1,2 or 3")
+            if user_input == 1:
+                browser.document <= ("The water is freezing and this maybe was not the best choice you could have made. You do however manage"
+                      "to reach him and to hold him up while the rest of the crew saves both of you. You get a cold from it and"
+                      "the snot and slobber running down your face must look terrible when the captain comes to check in and "
+                      "say his thanks.")
+                tension -= 1
+                injury += 1
+            elif user_input == 2:
+                browser.document <= ("You grab the rope, throw it to him and he manages to latch on. Pulling him close to the ship is easy"
+                      "enough but getting him up proves to be challenging. He is heavy and slow and you have to strain hard"
+                      "to hold on. But you manage and without causing a stir the pirate king is back on the boat within the hour."
+                      "You can tell he is grateful that you dod not expose him in front of the entire crew.")
+                injury += 2
+                tension += 1
+            elif user_input == 3:
+                browser.document <= ("You call for help and because you pointed out what happened he was saved within minutes. Working as a"
+                      "single usit made light work of the rescue and the king was back on board looking sheepish with no one "
+                      "coming to any harm. The sheepish look causes your stomach to flutter and you can't believe how bad you "
+                      "got it.")
+                pining += 1
+            else:
+                browser.document <= ("You are too freaked out to react. You just stand there and stare while other oeple do what needs to "
+                      "be done. Minutes later he is save, no thanks to you.")
+                tension -= 3
+        return (pining, injury, tension)
+    
+    
+    
+    
+    
+    def event(pining, injury, tension):
+        result = random.randrange(1, 6)
+        if result == 1:
+            browser.document <= ("You slip and fall on his deck")
+            injury += 1
+        elif result == 2 or result == 3:
+            browser.document <= ("There is a raid.")
+            user_input = input("What do you do? 1) Fight 2) Hide 3) Join the other crew")
+            if user_input == 1:
+                browser.document <= ("You fight. You swing your sword-")
+                result = random.randrange(1,6)
+                if result == 1 :
+                    browser.document <= ("You have terrible luck though. You get slashed in the stomach and fall down. Blood loss is making"
+                          "you woozy. You are close to dying.")
+                    injury += 5
+                elif result in [2,3,4]:
+                    browser.document <= ("The fight is hard, you get hurt but you do well. Around you some of your crewmates die. "
+                          "You win eventually.")
+                    injury += 2
+                elif result == 5:
+                    browser.document <= ("You win. it is not bloodless. Some people died on both sides. Thats never pleasant but you did not"
+                          "start the fight.")
+                    injury +=1
+                elif result ==6:
+                    browser.document <= ("Out of the corner of your eyes you see how one of the enemies tries to sneak up on the pirate king"
+                          "you are not letting that happen. With a flexibility that surprises even yourself you disable the "
+                          "guy, right before he can hurt the pirate king. You share an intense lingering look that makes every"
+                          "thing else fade away.")
+                    injury -= 1
+                    tension += 2
+    
+        elif result == 4 or result == 5:
+            browser.document <= ("You are kidnapped (again). The pirates who took you want to know where your crew has hidden treasure."
+                  "What do you tell them? "
+                  "1) You lie and say you don't have any treasure"
+                  "2) you lie and tell them a spot far from where it is buried"
+                  "3) You give up the treasure"
+                  "4) you taunt them"
+                  "5) you don't respond at all but try to break out as soon as they take their eyes off of you.")
+            user_input = input("Olease enter a number between 1 and 5")
+            if user_input == 5:
+                coin_flip = random.choice(["Heads", "Tails"])
+                if coin_flip == 'Tails':
+                    browser.document <= ("You succeed, sneak out in the middle of the night and return to your crew before they even"
+                          "really knew you were gone. The pirate king is very impressed")
+                    tension += 2
+                else:
+                    browser.document <= ("You fail, they recapture you before you could get far and lock you up. You have to wait to be"
+                          "rescued (again).")
+                    tension += 1
+                    injury += 1
+            elif user_input == 4:
+                browser.document <= ("The pirates get mad and hit you."
+                      " They stop asking questions but that does not help. You have to "
+                      "wait to be rescued and when rescue comes the pirate king has to carry you out because you canÄt walk")
+                injury += 3
+                tension += 2
+                pining += 2
+            else:
+                coin_flip = random.choice(["Heads", "Tails"])
+                if coin_flip == 'Tails':
+                    browser.document <= ("The pirates get mad and hit you. Whether or not you told the truth, they don't beliveve you."
+                          " They stop asking questions but that does not help. You have to "
+                          "wait to be rescued and when rescue comes the pirate king has to carry you out because you canÄt walk")
+                    injury += 3
+                    tension += 2
+                    pining += 2
+                else:
+                    if user_input == 1:
+                        browser.document <= ("The Pirates believe you. They make fun of your crew and let you go because you are that pathetic"
+                              "Your return to the ship causes a great flurry of activity but the return is a bit underwhelming."
+                              "Your adoration for the captain takes a hit when he does not seem the slightest bit impressed"
+                              "by you saving yourself.")
+                        pining -=1
+                    elif user_input == 2:
+                        browser.document <= ("The pirates believe you -- sort of. They keep you locked up while they send someone to check"
+                              "the spot out. You have only bought yourself time. But you have bought yourself time. You have"
+                              "be rescued (again) but at least you managed to pass the time by gathering intel and heal up")
+                        injury -= 1
+                        tension += 1
+                    elif user_input == 3:
+                        browser.document <= ("The pirates believe you and send someone to pick up the teasure, keeping you locked up. They "
+                              "tell you that you are welcome to join their crew and leave everything behind.")
+                        user_input = input("Do you take their offer?")
+                        if user_input == 'y':
+                            browser.document <= ("This was not what you imagined happening but.. its not a bad life. You never noticed how "
+                                  "... incapable? Small? the pirate king made you feel until you left. You grab some of the "
+                                  "treasure you remember and start fresh. This crew is different from the one you left behind"
+                                  "and you feel like a true equal. One of your crewmates starts flirting with you and while it"
+                                  "takes time you eventually start to date him. This was not what you set out for but you can't"
+                                  "be unhappy. Your old crew never even tries to rescue you. Did they even notice you were missing?")
+                            pining = 1000
+                        else:
+                            browser.document <= ("you are not taking their offer. You love your crew as weird as they may be. the rival pirates"
+                                  "take it surprisingly well. Sure they keep you tied up tight but thats just good kidnapping"
+                                  "etiquette. It does not take long before you are rescued (again).")
+                            tension += 1
+        elif result == 6:
+            browser.document <= ('He leaves you for a month to hunt for buried treasure. The crew is at lose ends. Without their captain they'
+                  'are not quite sure what to do.')
+            pining += 2
+            user_input = input("Do you attempt to install yourself as acting captain? 'y' or 'n'")
+            if user_input == 'y':
+                coin_flip = random.choice(["Heads", "Tails"])
+                if coin_flip == 'Tails':
+                    browser.document <= ("The crew is not happy with you trying to take charge. They lock you into the bowel of the ship and "
+                          "give you nothing but bread and water. You feel like you are going crazy while you are waiting for the"
+                          "pirate king to return. You are also nervous. The crew seems convinced, that he will be mad. When he"
+                          "finally returns the crew acts like you wanted to commit mutiny -- steal his ship and his crew. "
+                          "The captain asks you if that is true and promises a lighter sentence if you just confess.")
+                    injury += 2
+                    user_input = input("Do you tell the truth?")
+                    if user_input == 'y':
+                        coin_flip = random.choice(["Heads", "Tails"])
+                        if coin_flip == 'Tails':
+                            browser.document <= ("The captain does not believe you. He seems very disappoited. You are also very disappointed"
+                                  "in him. He locks you up for another month and then you are on deck duty for the next while.")
+                            tension -= 5
+                            pining -= 5
+                        else:
+                            browser.document <= ("Happy Ending outside the ending sequence")
+                            pining = 1000
+                    elif user_input == 'n':
+                        browser.document <= ("You don't want to risk him not believing you. He seems slightly disappointed and unsurprised?"
+                              "You don't know what to make of that...")
+                        tension -= 2
+                        pining -= 2
+                    else:
+                        browser.document <= ("The pirate king seems to not know what to make of your silence. He sends you to your quarters"
+                              "so he has time to think about everything. In the end he seems to come down to that not being in "
+                              "chatacter for you. he does not seem to believe that hte crew was malicious")
+                        tension += 1
+                        pining -= 1
+    
+    
+            else:
+                browser.document <= ("You are not meant to be captain and you won't. You wait for someone else to step up and make the"
+                      "decision. That is how you feel most comfortable")
+        return (pining, injury, tension)
+    
+    
+    
+    
+    def pining_end(pining, injury, tension):
+        browser.document <= ("Your pining has reached its peak. Time to make a decision. You can play it safe. Or you can take a risk "
+              "and confess.")
+        user_input = input(
+            "Do you want to play it safe and keep your feelings to yourself? Type 's' for safe or 'r' for risk.")
+        if user_input == "s":
+            browser.document <= ("You decide to keep your secret. The pirate king will never know your secret but thats okay. "
+                  "Love does not need to be romantic and sometimes the best decision you can make is sharing your life"
+                  "with the people that truly matter. Romantically or platonically.")
+        if user_input == 'r':
+            result = random.randrange(1, 6)
+            if result == 1:
+                browser.document <= ("one sided, sad rejection, stabbing")
+                injury += 2
+                if injury > 7:
+                    browser.document <= ('death')
+            if result == 2:
+                browser.document <= ("one sided, peaceful/ friendly rejection, business as usual")
+            if result == 3:
+                if tension > 5:
+                    browser.document <= ("one sided but not really, suuuper slow burn")
+                else:
+                    browser.document <= ("one sided, oeaceful, friendly, basically 2")
+            if result == 4:
+                browser.document <= ("mutual dating but we had not noticed, we are such big idiots")
+            if result == 5:
+                browser.document <= (
+                    "ship attacked in the middle of love confession, Decision time: attack, risk death but also impressing"
+                    "the captain, or hide, certain survival, much smaller odds at a happy ending")
+                user_input == input("pick a number between 1 and 6, if the rolled number is higher you enter the battle")
+                result = random.randrange(1, 6)
+                if result > user_input:
+                    if injury >= 9:
+                        browser.document <= ("You are in idiot and leap into battle while on death door, obviously that does not work"
+                              "and you die.")
+                    result = random.randrange(1, 6)
+                    if result < user_input:
+                        browser.document <= ("You magically safe the pirate king causing him to fall in love with you right then and there"
+                              "and then he whisks you away to a happily ever after")
+                    elif result == user_input:
+                        browser.document <= ("You safe the pirate king, he falls in love with you but you are also fatally wounded")
+                    else:
+                        browser.document <= ("You fail and die")
+                else:
+                    if injury > 7:
+                        browser.document <= ("You are smart and hide while super wounded, this means you can safe your entire crew and "
+                              "you get your happy ending")
+                    result = random.randrange(1, 6)
+                    if result > user_input:
+                        browser.document <= ("Your sarts impress the pirate king and he falls in love with you because of your brains")
+                    elif result == user_input:
+                        browser.document <= ("Grudging admiration but also cowardice is punished, you get promoted but wonÄt be seen as"
+                              "the love interest ever")
+                    else:
+                        browser.document <= ("Getting thrown off the ship because you are a giant coward and the pirate king is put off")
+        else:
+            result = random.randrange(1, 6)
+            win = [1, 2, 3]
+            lose = [4, 5, 6]
+            if result in win:
+                browser.document <= ("The pirate king confesses that he is in love with you and your heart explodes and you are"
+                      "super happy about it")
+            elif result in lose:
+                browser.document <= ("something about the pirate king making a fool of himself and the pining becoming less intense")
+                pining -= 7
+        return pining
+    
+    
+    def injury_end(pining,injury,tension):
+        browser.document <= ("You have been fatally wounded. YOu have to leave the ship if you want to survive. You can try to win the"
+              "pirate king over before you do but if you attempt that you may die on the ship.")
+        user_input = input("Win over the king? press 'y' for yes or 'n' for no.")
+        if user_input == 'y':
+            user_input = input("Your guts give you a bonus. Press 'p' to decrease your pining or 't' to increase tension")
+            if user_input == 'p':
+                pining -= 3
+            if user_input == 't':
+                tension += 2
+            else:
+                browser.document <= ("You squandered your chance and don't get a bonus")
+            if pining < 8 and tension > 5:
+                browser.document <= ("You have enough guts, and brains and knowledge etc, you confess your love.")
+            elif pining >= 9:
+                pining_end(pining,injury, tension)
+            elif tension < 5:
+                browser.document <= ("You confess your feelings but are rejected, you die, slightly heartbroken and still on the ship")
+            else:
+                browser.document <= ("your nerves fail you at the last second. You get safely to shore, regret and pining for eternity")
+        elif user_input == 'n':
+            result = random.randrange(1, 6)
+            good = [3, 4, 5, 6]
+            if result == 1:
+                browser.document <= ("The ship gets stuck in a storm and you die because your medical care is too delayed. Your crew loves"
+                      "you and gives you a respectful burial. Its sad and somber but also slihgtly uneventful")
+            elif result == 2:
+                browser.document <= (
+                    'You are murdered during some pirate shenanigans. Your crew is giving you a high velocity sea burial.')
+            else:
+                browser.document <= ("You reach the shore, the crew gives you a loving good bye and you live out a happy and fullfilled"
+                      "live on land, content with your decision and actually finding love?")
+        else:
+            browser.document <= ("You fumble the decision for too long and run out of time. The pirate king gets you off the ship and "
+                  "into medical care before leaving you forever. By the time you are healthy again there is no trace of the "
+                  "king or his ship left and you live out a boring and uneventful live on land")
+    
+    
+    def tension_end(pining, injury, tension):
+        browser.document <= ("The tension between you and the pirate king has reached the breaking point. Can you win him over?"
+              "Or will you stumble at this final hurdle? You confess your feelings and anxiously stare at him, waiting for"
+              "his reaction")
+        result = random.randrange(1, 6)
+        if result == 1 or result == 2:
+            browser.document <= ("The pirate king wants to duel. If you decline the tension between you will decrease."
+                  "You won't get a happy ending but at least for now none of you die."
+                  "If you accept the challenge you may impress the pirate king and get a happy ending. You may also die."
+                  "Or kill the pirate king. Or both.")
+            user_input = input("Do you want to duel? Type 'y' for yes and 'n' for no")
+            if user_input == 'n':
+                browser.document <= ("You decline the battle. The pirate king shakes his head in disappointment and leaves")
+                tension -= 6
+            elif user_input == 'y':
+                result = random.randrange(1, 6)
+                if result == 1:
+                    browser.document <= ('you get a fatal stab in at the same time as you.')
+                    if pining > 5:
+                        browser.document <= ("in your dying breaths you decide you donÄt care, reach out and hold the pirate kings hand"
+                              "as both of you slip away into death")
+                    elif injury < 3:
+                        browser.document <= ("something about a very slow and painful and lonely death? watching the king die")
+                    else:
+                        browser.document <= ("dramatic but quick death scene, we don't know")
+                if result == 2:
+                    browser.document <= ('You die -- Story telling')
+                if result == 3:
+                    browser.document <= ('you kill the pirate king. -- Story telling')
+                if result == 4:
+                    browser.document <= ('you fight, you tie. Do you want to pursue a relationship?')
+                    user_input = input("Type 'y' for yes and 'n' for no")
+                    if user_input == 'n':
+                        browser.document <= ('you decide that you are better off as friends and you end up becoming really close')
+                    elif user_input == 'y':
+                        browser.document <= ('you are well matched, you are happy, you date, you have a happily ever after')
+                    else:
+                        browser.document <= ('You both fail at talking about your feelings, stumbling over words. You decide to go on '
+                              'a single date. it may work, it may fail but you now know that the pirate king is just as'
+                              'much of a giant dork as you are')
+                if result == 5:
+                    browser.document <= ('You win against the pirate king. He is so impressed with you that he falls madly in love'
+                          'You end up having an epic love story its great')
+                if result == 6:
+                    browser.document <= ('The pirate king beats you. He declares that you need further training and you fall in love-'
+                          '-- Story telling increase?')
+            else:
+                browser.document <= ('You stumbled over your words. The pirate king laughs and the tension breaks. The duel is'
+                      'off the table for the moment but the pirate king seems more amused rather than disappointed.')
+                tension -= 3
+        elif result <= 4:
+            browser.document <= ("You spend one wonderful, magical night together. Then he leaves forever and you never see him again.")
+        elif result <= 6:
+            browser.document <= ("You get gay pirate married. You adopt a bunch of fully grown pirates as your figurative children. "
+                  "Maybe you find some babies and adopt a bunch of actual children as well.")
+        return tension
+    
+    
+    
+    
+    
+    
+    
+    browser.document <= ("You are gay for the pirate king. You are not sure if he even knows you exist. He certainly does not know about"
+          "your feelings. And even if he did... there is no way he could recipicate, right?")
+    r_pining, r_injury, r_tension= pirate_adventure()
+    while r_pining <=10 and r_injury <=13 and r_tension <=16:
+        r_pining, r_injury, r_tension = pirate_adventure(r_pining, r_injury, r_tension)
+    browser.document <= (r_pining, r_injury, r_tension)
+    
+    
+    
+    
+    </script>
+
+
+</body>
+
+</html>
